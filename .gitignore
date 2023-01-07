@@ -1,0 +1,13 @@
+*.pyc
+*.xml
+aidms/dataset/all/*
+*.pth
+customized/dataset/train/*
+!customized/dataset/train/.gitkeep
+customized/dataset/validation/* 
+!customized/dataset/validation/.gitkeep
+customized/dataset/test/*
+!customized/dataset/test/.gitkeep
+*.pt
+customized/model_weight/*
+!customized/model_weight/.gitkeep

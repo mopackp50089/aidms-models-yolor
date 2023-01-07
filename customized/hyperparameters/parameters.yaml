@@ -1,0 +1,39 @@
+hyperparameters:
+  inference:
+    advanced_para:
+      CONF_THRESHOLD:
+        value: 0.2
+      DETECTION_MAX_INSTANCES:
+        value: 50
+      IOU_THRESHOLD:
+        value: 0.4
+    default_para:
+      DETECTION_MIN_CONFIDENCE:
+        value: 0.5
+      batch_size:
+        value: 2
+  training:
+    advanced_para:
+      image_size:
+        Height:
+          value: 640
+        Width:
+          value: 640
+      learning_rate:
+        value: 0.001
+      workers:
+        value: 2
+    default_para:
+      batch:
+        value: 8
+      epoch:
+        value: 300
+      model:
+        value:
+        - select_key: yolor_p6
+        - yolor_p6
+        - yolor_w6
+model_type: object_detection
+name: xxxx-model-hyperparameters
+status: 'null'
+version: Wed, 18 May 2022 00:00:00 GMT

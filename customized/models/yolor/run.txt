@@ -1,0 +1,86 @@
+#yolor_p6
+
+python test.py --data inference/images/NG-00053_A_S_H.png --img 640 --batch 1 --conf 0.001 --iou 0.65 --device 0 --cfg cfg/yolor_p6.cfg --weights yolor_p6.pt --name yolor_p6_val
+python detect.py --source inference/images/horses.jpg --cfg cfg/yolor_p6.cfg --weights yolor_p6.pt --conf 0.25 --img-size 640
+
+#Use customer data
+
+#Train:
+python train.py --batch-size 2 --img 640 640 --data gear.yaml --cfg cfg/yolor_p6.cfg --weights '' --name yolor_p6_gear_0812 --hyp data/hyp.scratch.640.yaml --epochs 10
+
+python train.py --img 640 640 --data yolor_dataset/yolor_dataset.yaml --cfg cfg/yolor_p6.cfg --weights '' --name yolor_p6_gear_0812 --hyp data/hyp.scratch.640.yaml --epochs 10
+
+Step 1.
+cd /Data_Transform_tool/coco2darknet.py 將自己得coco json轉成darknet.txt (.json -> step2所需labels)
+
+Step 2.
+按照以下結構放置Dataset
+#Data set: (Labels use Darknet format)
+fold_path/images/train_image   
+                /val_image
+        /labels/train_labels
+               /val_labels
+
+Step 3.
+設置customer_data.yaml
+Ex: /data/gear.yaml
+
+#gear.yaml setting:
+val: fold_path/images/val_image
+train: fold_path/images/train_image
+Ex:
+val: ./GEAR_dataset/images/val2017/
+
+# number of classes
+nc: 1
+
+# class names
+names: ['NG']
+
+Step 4.
+修改backbone .cfg，(1)修改[implicit_mul]的filters與[yolor]前的[convolutional]filters (2)修改[yolo]的classes
+(1) 
+[implicit_mul]
+filters={num_filters}
+
+[convolutional]
+filters={num_filters}
+
+(2) 
+[yolo]
+classes={num_classes}
+
+
+Done:
+default save_path : ./runs/train/'cfg_filename'_'yaml_filename'/weights/best.pt
+Ex:
+./runs/train/yolor_p6_gear/weights/best.pt
+
+#Inference:
+One Image:
+python detect.py --source inference/images/horses.jpg --cfg cfg/yolor_p6.cfg --weights yolor_p6.pt --conf 0.25 --img-size 640
+Image folder:
+python detect.py --source inference_gear --cfg cfg/yolor_p6.cfg --weights yolor_p6.pt --conf 0.25 --img-size 640
+
+blood test":
+python detect.py --source /workspace/result/upload_images  --cfg /workspace/result/1/model_weight/yolor_p6.cfg --weights /workspace/result/1/model_weight/yolor_p6.pt --conf 0.25 --img-size 640 --names data/blood.names
+
+#yolov4_p6
+
+#Train:
+python train.py --batch-size 1 --img 640 640 --data gear.yaml --cfg cfg/yolov4_p6.cfg --weights '' --name yolov4_p6_gear --hyp data/hyp.scratch.640.yaml --epochs 1
+
+
+
+AIDMS weight test
+python detect.py --source inference/images/horses.jpg --cfg cfg/yolor_p6.cfg --weights /workspace/result/1/model_weight/model.pth --conf 0.25 --img-size 640
+
+python detect.py --source inference/images/horses.jpg --cfg cfg/yolor_p6.cfg --weights yolor_p6.pt --conf 0.25 --img-size 640
+
+python detect.py --source inference_gear --names data/gear.names --cfg cfg/yolor_p6.cfg --weights model.pth --conf 0.25 --img-size 640
+
+
+08/12
+python train.py --img 640 640 --data data/animal.yaml --cfg cfg/yolor_p6.cfg --weights '' --name animal --hyp data/hyp.scratch.640.yaml
+
+python detect.py --source animal_dataset/images/test --cfg cfg/yolor_p6.cfg --weights animal_weight/model.pth --conf 0.25 --img-size 640 --names data/animal.names
